@@ -8,4 +8,3 @@ COPY arial.ttf /usr/share/fonts/TTF/arial.ttf
 ENV WORKDIR=/mrtg/data
 ENV HTMLDIR=/mrtg/html
 ENTRYPOINT ["./start.sh"]
-CMD ["1.1.1.1"]
