@@ -58,7 +58,7 @@ do
 	VDEF:bras4c=bras4,LAST \
 	VDEF:bras4min=bras4,MINIMUM \
 	VDEF:bras4max=bras4,MAXIMUM \
-	LINE:bras4#00FF00:" BRAS#4 PPPoE\n" \
+	LINE:bras4#00D000:" BRAS#4 PPPoE\n" \
 	COMMENT:"4 Current\:" GPRINT:bras4c:"%6.2lf%s\\n" \
 	COMMENT:"4 Max\:" GPRINT:bras4max:"%6.2lf%s\\n" \
 	COMMENT:"4 Min\:" GPRINT:bras4min:"%6.2lf%s\\n" \
@@ -84,7 +84,7 @@ do
         VDEF:bras4c=bras4,LAST \
         VDEF:bras4min=bras4,MINIMUM \
         VDEF:bras4max=bras4,MAXIMUM \
-        LINE:bras4#00FF00:" BRAS\#4 PPPoE\\n" \
+        LINE:bras4#00D000:" BRAS\#4 PPPoE\\n" \
         COMMENT:"4 Current\:" GPRINT:bras4c:"%6.2lf%s\\n" \
         COMMENT:"4 Max\:" GPRINT:bras4max:"%6.2lf%s\\n" \
         COMMENT:"4 Min\:" GPRINT:bras4min:"%6.2lf%s\\n" \
@@ -110,7 +110,7 @@ do
         VDEF:bras4c=bras4,LAST \
         VDEF:bras4min=bras4,MINIMUM \
         VDEF:bras4max=bras4,MAXIMUM \
-        LINE:bras4#00FF00:" BRAS\#4 PPPoE\\n" \
+        LINE:bras4#00D000:" BRAS\#4 PPPoE\\n" \
         COMMENT:"4 Current\:" GPRINT:bras4c:"%6.2lf%s\\n" \
         COMMENT:"4 Max\:" GPRINT:bras4max:"%6.2lf%s\\n" \
         COMMENT:"4 Min\:" GPRINT:bras4min:"%6.2lf%s\\n" \
@@ -136,7 +136,7 @@ do
         VDEF:bras4c=bras4,LAST \
         VDEF:bras4min=bras4,MINIMUM \
         VDEF:bras4max=bras4,MAXIMUM \
-        LINE:bras4#00FF00:" BRAS\#4 PPPoE\\n" \
+        LINE:bras4#00D000:" BRAS\#4 PPPoE\\n" \
         COMMENT:"4 Current\:" GPRINT:bras4c:"%6.2lf%s\\n" \
         COMMENT:"4 Max\:" GPRINT:bras4max:"%6.2lf%s\\n" \
         COMMENT:"4 Min\:" GPRINT:bras4min:"%6.2lf%s\\n" \
@@ -162,7 +162,7 @@ do
         VDEF:bras4c=bras4,LAST \
         VDEF:bras4min=bras4,MINIMUM \
         VDEF:bras4max=bras4,MAXIMUM \
-        LINE:bras4#00FF00:" BRAS\#4 PPPoE\\n" \
+        LINE:bras4#00D000:" BRAS\#4 PPPoE\\n" \
         COMMENT:"4 Current\:" GPRINT:bras4c:"%6.2lf%s\\n" \
         COMMENT:"4 Max\:" GPRINT:bras4max:"%6.2lf%s\\n" \
         COMMENT:"4 Min\:" GPRINT:bras4min:"%6.2lf%s\\n" \
