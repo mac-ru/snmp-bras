@@ -1,8 +1,6 @@
 #!/bin/bash
 WORKDIR=/snmp/
-HTMLDIR=/mrtg/html
-echo $0
-printenv
+HTMLDIR=/mrtg/html/
 
 if [ -f "$WORKDIR"bras3.rrd ]
 then
