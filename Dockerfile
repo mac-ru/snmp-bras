@@ -1,4 +1,5 @@
 FROM fboaventura/dckr-mrtg:v2.3.0
+ENV TZ "Europe/Samara"
 RUN mkdir /snmp/
 RUN mkdir /mrtg/data/
 WORKDIR /snmp/
