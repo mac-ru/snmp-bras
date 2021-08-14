@@ -180,7 +180,7 @@ fi
         COMMENT:"5 Max\:" GPRINT:bras5max:"%6.2lf%s\\n" \
         COMMENT:"5 Min\:" GPRINT:bras5min:"%6.2lf%s\\n"
 
-echo "Finish render. Exitting"  > "$FIFOFILE"
+echo "Finish render at `date`. Exitting"  > "$FIFOFILE"
 
 
 
