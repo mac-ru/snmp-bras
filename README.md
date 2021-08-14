@@ -1,9 +1,12 @@
 # Internal project.
-TL:DR
+## TL:DR
+To run on server use command:
+
 ```
 $ docker run -d --log-opt max-size=10m --log-opt max-file=5 --name bras-snmp -e BRAS3IP=3.3.3.3 -e BRAS4IP=4.4.4.4 -e BRAS5IP=5.5.5.5 -e COMMUNITY=public -p 8080:80 -v /home/rrd:/mrtg/data -v /home/html:/mrtg/html snmp:latest
 ```
 
+## Description
 This project saves special SNMP data and put it into RRD to dispay user counts.
 Uses environment variables to put data into container
 

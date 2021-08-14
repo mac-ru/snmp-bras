@@ -3,10 +3,11 @@ ENV TZ "Europe/Samara"
 RUN mkdir /snmp/
 RUN mkdir /mrtg/data/
 WORKDIR /snmp/
-COPY start.sh /snmp/
-COPY arial.ttf /usr/share/fonts/TTF/arial.ttf
-COPY crontab /etc/crontabs/root
-COPY run.sh /snmp/run.sh
+COPY files/start.sh /snmp/
+COPY files/arial.ttf /usr/share/fonts/TTF/arial.ttf
+COPY files/crontab /etc/crontabs/root
+COPY files/run.sh /snmp/run.sh
+COPY files/index.html /snmp/index.html
 ENV WORKDIR=/mrtg/data
 ENV FIFOFILE=/snmp/socket.fifo
 ENV HTMLDIR=/mrtg/html
