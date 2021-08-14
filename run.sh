@@ -39,7 +39,7 @@ then
                 VALUE5=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS5IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
                 if [[ $VALUE5 == "" ]]; then echo "BRAS5 input is zero again. Are you RNRing son?" > "$FIFOFILE" ; fi
         fi
-:c
+	echo "Value get from BRAS5: "$VALUE5  > "$FIFOFILE"	
 	rrdtool update "$WORKDIR"/bras5.rrd ${START}:${VALUE5}
 else
         echo "BRAS5 RRD not exists, skipping update" > "$FIFOFILE"
