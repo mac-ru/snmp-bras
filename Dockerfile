@@ -8,5 +8,6 @@ COPY arial.ttf /usr/share/fonts/TTF/arial.ttf
 COPY crontab /etc/crontabs/root
 COPY run.sh /snmp/run.sh
 ENV WORKDIR=/mrtg/data
+ENV FIFOFILE=/snmp/socket.fifo
 ENV HTMLDIR=/mrtg/html
 ENTRYPOINT ["./start.sh"]

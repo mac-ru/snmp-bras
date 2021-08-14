@@ -27,4 +27,9 @@ fi
 crond
 lighttpd -f /etc/lighttpd/lighttpd.conf
 
-sleep 100000
+mkfifo -m 600 "$FIFOFILE"
+
+while true 
+do
+	tail -f "$FIFOFILE"
+done

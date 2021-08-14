@@ -1,36 +1,37 @@
 #!/bin/bash
 
-echo "Running at" `date`
+echo "Running at" `date` > "$FIFOFILE"
 START=$(expr $(date "+%s") - 0)
 
 
 if [ -f "$WORKDIR"/bras3.rrd ]
 then
 	VALUE3=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS3IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-	echo "Value get from BRAS3: "$VALUE3
+	echo "Value get from BRAS3: "$VALUE3 > "$FIFOFILE"
 	rrdtool update "$WORKDIR"/bras3.rrd ${START}:${VALUE3}
 else
-	echo "BRAS3 RRD not exists, skipping update"
+	echo "BRAS3 RRD not exists, skipping update" > "$FIFOFILE"
 fi
 
 if [ -f "$WORKDIR"/bras4.rrd ]
 then
 	VALUE4=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS4IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-	echo "Value get from BRAS4: "$VALUE4
+	echo "Value get from BRAS4: "$VALUE4  > "$FIFOFILE"
 	rrdtool update "$WORKDIR"/bras4.rrd ${START}:${VALUE4}
 else
-        echo "BRAS4 RRD not exists, skipping update"
+        echo "BRAS4 RRD not exists, skipping update" > "$FIFOFILE"
 fi
 
 if [ -f "$WORKDIR"/bras5.rrd ]
 then
 	VALUE5=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS5IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-	echo "Value get from BRAS5: "$VALUE5
+	echo "Value get from BRAS5: "$VALUE5 > "$FIFOFILE"
 	rrdtool update "$WORKDIR"/bras5.rrd ${START}:${VALUE5}
 else
-        echo "BRAS5 RRD not exists, skipping update"
+        echo "BRAS5 RRD not exists, skipping update" > "$FIFOFILE"
 fi
 
+	echo "Render graph 'now'"  > "$FIFOFILE"
 	rrdtool graph "$HTMLDIR"/bras_now.png  -w 1150 -h 600  --start now-7200s --end now --alt-autoscale --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "Huawei ME60 Bras NOW" \
 	DEF:bras3="$WORKDIR"/bras3.rrd:users:LAST \
 	VDEF:bras3c=bras3,LAST \
@@ -57,6 +58,7 @@ fi
 	COMMENT:"5 Max\:" GPRINT:bras5max:"%6.2lf%s\\n" \
 	COMMENT:"5 Min\:" GPRINT:bras5min:"%6.2lf%s\\n"
 
+        echo "Render graph '1d'"  > "$FIFOFILE"
         rrdtool graph "$HTMLDIR"/bras_1d.png  -w 1150 -h 600   --start now-1d --end now --alt-autoscale --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "Huawei ME60 Bras Today" \
         DEF:bras3="$WORKDIR"/bras3.rrd:users:LAST \
         VDEF:bras3c=bras3,LAST \
@@ -83,7 +85,8 @@ fi
         COMMENT:"5 Max\:" GPRINT:bras5max:"%6.2lf%s\\n" \
         COMMENT:"5 Min\:" GPRINT:bras5min:"%6.2lf%s\\n"
 
-        rrdtool graph "$HTMLDIR"/bras_1w.png  -w 1150 -h 600   --start now-1w --end now --alt-autoscale --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "Huawei ME60 Bras Week" \
+        echo "Render graph '1w'"  > "$FIFOFILE"
+	rrdtool graph "$HTMLDIR"/bras_1w.png  -w 1150 -h 600   --start now-1w --end now --alt-autoscale --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "Huawei ME60 Bras Week" \
         DEF:bras3="$WORKDIR"/bras3.rrd:users:LAST \
         VDEF:bras3c=bras3,LAST \
         VDEF:bras3min=bras3,MINIMUM \
@@ -109,7 +112,8 @@ fi
         COMMENT:"5 Max\:" GPRINT:bras5max:"%6.2lf%s\\n" \
         COMMENT:"5 Min\:" GPRINT:bras5min:"%6.2lf%s\\n"
 
-        rrdtool graph "$HTMLDIR"/bras_1m.png  -w 1150 -h 600   --start now-1m --end now --alt-autoscale --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "Huawei ME60 Bras Month" \
+        echo "Render graph '1m'"  > "$FIFOFILE"
+	rrdtool graph "$HTMLDIR"/bras_1m.png  -w 1150 -h 600   --start now-1m --end now --alt-autoscale --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "Huawei ME60 Bras Month" \
         DEF:bras3="$WORKDIR"/bras3.rrd:users:LAST \
         VDEF:bras3c=bras3,LAST \
         VDEF:bras3min=bras3,MINIMUM \
@@ -135,6 +139,7 @@ fi
         COMMENT:"5 Max\:" GPRINT:bras5max:"%6.2lf%s\\n" \
         COMMENT:"5 Min\:" GPRINT:bras5min:"%6.2lf%s\\n"
 
+        echo "Render graph '1y'"  > "$FIFOFILE"
         rrdtool graph "$HTMLDIR"/bras_1y.png  -w 1150 -h 600   --start now-1y --end now --alt-autoscale --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "Huawei ME60 Bras Year" \
         DEF:bras3="$WORKDIR"/bras3.rrd:users:LAST \
         VDEF:bras3c=bras3,LAST \
@@ -161,7 +166,7 @@ fi
         COMMENT:"5 Max\:" GPRINT:bras5max:"%6.2lf%s\\n" \
         COMMENT:"5 Min\:" GPRINT:bras5min:"%6.2lf%s\\n"
 
-
+echo "Finish render. Exitting"  > "$FIFOFILE"
 
 
 
