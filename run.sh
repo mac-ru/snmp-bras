@@ -3,10 +3,14 @@
 echo "Running at" `date` > "$FIFOFILE"
 START=$(expr $(date "+%s") - 0)
 
-
 if [ -f "$WORKDIR"/bras3.rrd ]
 then
 	VALUE3=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS3IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
+	if [[ $VALUE3 == "" ]]; then
+		echo "BRAS3 input is zero, retrying" > "$FIFOFILE"
+		VALUE3=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS3IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
+		if [[ $VALUE3 == "" ]]; then echo "BRAS3 input is zero again. Are you RNRing son?" > "$FIFOFILE" ; fi
+	fi
 	echo "Value get from BRAS3: "$VALUE3 > "$FIFOFILE"
 	rrdtool update "$WORKDIR"/bras3.rrd ${START}:${VALUE3}
 else
@@ -15,7 +19,12 @@ fi
 
 if [ -f "$WORKDIR"/bras4.rrd ]
 then
-	VALUE4=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS4IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
+        VALUE4=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS4IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
+        if [[ $VALUE4 == "" ]]; then
+                echo "BRAS4 input is zero, retrying" > "$FIFOFILE"
+                VALUE4=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS4IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
+                if [[ $VALUE4 == "" ]]; then echo "BRAS4 input is zero again. Are you RNRing son?" > "$FIFOFILE" ; fi
+        fi
 	echo "Value get from BRAS4: "$VALUE4  > "$FIFOFILE"
 	rrdtool update "$WORKDIR"/bras4.rrd ${START}:${VALUE4}
 else
@@ -24,8 +33,13 @@ fi
 
 if [ -f "$WORKDIR"/bras5.rrd ]
 then
-	VALUE5=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS5IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-	echo "Value get from BRAS5: "$VALUE5 > "$FIFOFILE"
+        VALUE5=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS5IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
+        if [[ $VALUE5 == "" ]]; then
+                echo "BRAS5 input is zero, retrying" > "$FIFOFILE"
+                VALUE5=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS5IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
+                if [[ $VALUE5 == "" ]]; then echo "BRAS5 input is zero again. Are you RNRing son?" > "$FIFOFILE" ; fi
+        fi
+:c
 	rrdtool update "$WORKDIR"/bras5.rrd ${START}:${VALUE5}
 else
         echo "BRAS5 RRD not exists, skipping update" > "$FIFOFILE"
