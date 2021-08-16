@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DRAWGRAPH () {
-rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end now --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
+rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
         DEF:bras3="$WORKDIR"/bras3.rrd:users:LAST \
         VDEF:bras3c=bras3,LAST \
         VDEF:bras3min=bras3,MINIMUM \
@@ -30,50 +30,200 @@ rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end
 }
 
 
+DRAW3SS () {
+rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 200 -h 490  --start "$STARTPOS" --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
+        DEF:brass1="$WORKDIR"/"$BRASS1":users:LAST \
+        VDEF:brass1c=brass1,LAST \
+        VDEF:brass1min=brass1,MINIMUM \
+        VDEF:brass1max=brass1,MAXIMUM \
+        DEF:brass2="$WORKDIR"/"$BRASS2":users:LAST \
+        VDEF:brass2c=brass2,LAST \
+        VDEF:brass2min=brass2,MINIMUM \
+        VDEF:brass2max=brass2,MAXIMUM \
+        DEF:brass3="$WORKDIR"/"$BRASS3":users:LAST \
+        VDEF:brass3c=brass3,LAST \
+        VDEF:brass3min=brass3,MINIMUM \
+        VDEF:brass3max=brass3,MAXIMUM \
+	COMMENT:"        :"
+	LINE:brass1#FF0000:" $SS1 " \
+        LINE:brass2#00D000:" $SS2 " \
+        LINE:brass3#0000FF:" $SS3\n" \
+        COMMENT:"3 Current\:" GPRINT:brass1c:"% 3.0lf" \
+        COMMENT:"                         4 Current\:" GPRINT:brass2c:"% 3.0lf" \
+        COMMENT:"                         5 Current\:" GPRINT:brass3c:"% 3.0lf\n" \
+        COMMENT:"3 Max\:" GPRINT:brass1max:"% 3.0lf" \
+        COMMENT:"                         4 Max\:" GPRINT:brass2max:"% 3.0lf" \
+        COMMENT:"                         5 Max\:" GPRINT:brass3max:"% 3.0lf\n" \
+        COMMENT:"3 Min\:" GPRINT:brass1min:"% 3.0lf" \
+        COMMENT:"                         4 Min\:" GPRINT:brass2min:"% 3.0lf" \
+        COMMENT:"                         5 Min\:" GPRINT:brass3min:"% 3.0lf\n"
+
+}
+
+
+DRAW4SS () {
+rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 200 -h 490  --start "$STARTPOS" --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
+        DEF:brass1="$WORKDIR"/"$BRASS1":users:LAST \
+        DEF:brass2="$WORKDIR"/"$BRASS2":users:LAST \
+        DEF:brass3="$WORKDIR"/"$BRASS3":users:LAST \
+        DEF:brass4="$WORKDIR"/"$BRASS4":users:LAST \
+        LINE:brass1#FF0000:"$SS1 " \
+        LINE:brass2#00D000:"$SS2 " \
+        LINE:brass3#0000FF:"$SS3 " \
+        LINE:brass4#FF9630:"$SS4 " 
+echo rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 300 -h 490  --start "$STARTPOS" --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" DEF:brass1="$WORKDIR"/"$BRASS1":users:LAST DEF:brass2="$WORKDIR"/"$BRASS2":users:LAST DEF:brass3="$WORKDIR"/"$BRASS3":users:LAST DEF:brass4="$WORKDIR"/"$BRASS4":users:LAST  LINE:brass1#FF0000:"$SS1 " LINE:brass2#00D000:"$SS2 " LINE:brass3#0000FF:"$SS3 " LINE:brass4#FF9630:"$SS4 " > "$FIFOFILE"
+
+
+
+}
+
+
+UPDATEOID () {
+if [ -f "$WORKDIR"/"$RRDFILE" ]
+then
+        OV=`snmpget -v 2c -c "$COMMUNITY" "$BRASIP" $OID | awk '{ print $4 }'`
+        if [[ $OV == "" ]]; then
+                echo "$BRASNAME input is zero, retrying" > "$FIFOFILE"
+                OV=`snmpget -v 2c -c "$COMMUNITY" "$BRASIP" $OID | awk '{ print $4 }'`
+                if [[ $OV == "" ]]; then echo "$BRASNAME input is zero again. Are you RNRing son?" > "$FIFOFILE" ; fi
+        fi
+        echo "Value get from $BRASNAME: "$OV > "$FIFOFILE"
+        rrdtool update "$WORKDIR"/"$RRDFILE" ${START}:${OV}
+else
+        echo "$BRASNAME RRD not exists, skipping update" > "$FIFOFILE"
+fi
+}
+
 echo "Running at" `date` > "$FIFOFILE"
 START=$(expr $(date "+%s") - 0)
 
-if [ -f "$WORKDIR"/bras3.rrd ]
-then
-        VALUE3=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS3IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-        if [[ $VALUE3 == "" ]]; then
-                echo "BRAS3 input is zero, retrying" > "$FIFOFILE"
-                VALUE3=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS3IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-                if [[ $VALUE3 == "" ]]; then echo "BRAS3 input is zero again. Are you RNRing son?" > "$FIFOFILE" ; fi
-        fi
-        echo "Value get from BRAS3: "$VALUE3 > "$FIFOFILE"
-        rrdtool update "$WORKDIR"/bras3.rrd ${START}:${VALUE3}
-else
-        echo "BRAS3 RRD not exists, skipping update" > "$FIFOFILE"
-fi
+#GET USERS
+RRDFILE="bras3.rrd"
+BRASIP="$BRAS3IP"
+BRASNAME="BRAS3"
+OID=1.3.6.1.4.1.2011.5.2.1.14.1.1.0
+UPDATEOID
 
-if [ -f "$WORKDIR"/bras4.rrd ]
-then
-        VALUE4=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS4IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-        if [[ $VALUE4 == "" ]]; then
-                echo "BRAS4 input is zero, retrying" > "$FIFOFILE"
-                VALUE4=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS4IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-                if [[ $VALUE4 == "" ]]; then echo "BRAS4 input is zero again. Are you RNRing son?" > "$FIFOFILE" ; fi
-        fi
-        echo "Value get from BRAS4: "$VALUE4  > "$FIFOFILE"
-        rrdtool update "$WORKDIR"/bras4.rrd ${START}:${VALUE4}
-else
-        echo "BRAS4 RRD not exists, skipping update" > "$FIFOFILE"
-fi
+RRDFILE="bras4.rrd"
+BRASIP="$BRAS4IP"
+BRASNAME="BRAS4"
+OID=1.3.6.1.4.1.2011.5.2.1.14.1.1.0
+UPDATEOID
 
-if [ -f "$WORKDIR"/bras5.rrd ]
-then
-        VALUE5=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS5IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-        if [[ $VALUE5 == "" ]]; then
-                echo "BRAS5 input is zero, retrying" > "$FIFOFILE"
-                VALUE5=`snmpgetnext -v 2c -c "$COMMUNITY" "$BRAS5IP" 1.3.6.1.4.1.2011.5.2.1.14.1.1 | awk '{ print $4 }'`
-                if [[ $VALUE5 == "" ]]; then echo "BRAS5 input is zero again. Are you RNRing son?" > "$FIFOFILE" ; fi
-        fi
-        echo "Value get from BRAS5: "$VALUE5  > "$FIFOFILE"
-        rrdtool update "$WORKDIR"/bras5.rrd ${START}:${VALUE5}
-else
-        echo "BRAS5 RRD not exists, skipping update" > "$FIFOFILE"
-fi
+RRDFILE="bras5.rrd"
+BRASIP="$BRAS5IP"
+BRASNAME="BRAS5"
+OID=1.3.6.1.4.1.2011.5.2.1.14.1.1.0
+UPDATEOID
+
+#GET SUBSLOTS
+
+RRDFILE="bras3_ss1.rrd"
+BRASIP="$BRAS3IP"
+BRASNAME="BRAS3 Eth1"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.1.0
+UPDATEOID
+
+RRDFILE="bras3_ss2.rrd"
+BRASIP="$BRAS3IP"
+BRASNAME="BRAS3 Eth2"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.2.0
+UPDATEOID
+
+RRDFILE="bras3_ss3.rrd"
+BRASIP="$BRAS3IP"
+BRASNAME="BRAS3 Eth5"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.2.1
+UPDATEOID
+
+
+RRDFILE="bras4_ss1.rrd"
+BRASIP="$BRAS4IP"
+BRASNAME="BRAS4 Eth1"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.1.0
+UPDATEOID
+
+RRDFILE="bras4_ss2.rrd"
+BRASIP="$BRAS4IP"
+BRASNAME="BRAS4 Eth6"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.1.1
+UPDATEOID
+
+RRDFILE="bras4_ss3.rrd"
+BRASIP="$BRAS4IP"
+BRASNAME="BRAS4 Eth2"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.2.0
+UPDATEOID
+
+
+
+RRDFILE="bras5_ss1.rrd"
+BRASIP="$BRAS5IP"
+BRASNAME="BRAS5 Eth1"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.1.0
+UPDATEOID
+
+RRDFILE="bras5_ss2.rrd"
+BRASIP="$BRAS5IP"
+BRASNAME="BRAS5 Eth6"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.1.1
+UPDATEOID
+
+RRDFILE="bras5_ss3.rrd"
+BRASIP="$BRAS5IP"
+BRASNAME="BRAS5 Eth2"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.2.0
+UPDATEOID
+
+RRDFILE="bras5_ss4.rrd"
+BRASIP="$BRAS5IP"
+BRASNAME="BRAS5 Eth5"
+OID=1.3.6.1.4.1.2011.5.2.1.33.1.3.3.0
+UPDATEOID
+
+
+
+#RENDER
+
+echo "Render graph '3SS' BRAS3" > "$FIFOFILE"
+GRAPHFILE=bras3_ss.png
+BRASS1=bras3_ss1.rrd
+BRASS2=bras3_ss2.rrd
+BRASS3=bras3_ss3.rrd
+SS1=Eth1
+SS2=Eth2
+SS3=Eth5
+GRAPHCAP="BRAS3 Subslots"
+STARTPOS=now-7200s
+DRAW3SS
+
+echo "Render graph '3SS' BRAS4" > "$FIFOFILE"
+GRAPHFILE=bras4_ss.png
+BRASS1=bras4_ss1.rrd
+BRASS2=bras4_ss2.rrd
+BRASS3=bras4_ss3.rrd
+SS1=Eth1
+SS2=Eth6
+SS3=Eth2
+GRAPHCAP="BRAS4 Subslots"
+STARTPOS=now-7200s
+DRAW3SS
+
+echo "Render graph '4SS' BRAS5" > "$FIFOFILE"
+GRAPHFILE=bras5_ss.png
+BRASS1=bras5_ss1.rrd
+BRASS2=bras5_ss2.rrd
+BRASS3=bras5_ss3.rrd
+BRASS4=bras5_ss4.rrd
+SS1=Eth1
+SS2=Eth6
+SS3=Eth2
+SS4=Eth5
+GRAPHCAP="BRAS5\ Subslots"
+STARTPOS=now-7200s
+DRAW4SS
+
+
 
 echo "Render graph 'now'"  > "$FIFOFILE"
 GRAPHFILE=bras_now.png

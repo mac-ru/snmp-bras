@@ -1,31 +1,77 @@
 #!/bin/bash
 
-if [ -f "$WORKDIR"/bras3.rrd ]
+IFNOTCREATE () {
+if [ -f "$WORKDIR"/"$RRDFILE" ]
 then
-	echo "BRAS3 RRD is exists"
+        echo "$BRASNAME RRD is exists"
 else
-	echo "BRAS RRD not exists, creating"
-	rrdtool create "$WORKDIR"/bras3.rrd --step=60 --start=now-1s DS:users:GAUGE:181:U:U  RRA:LAST:0:1:5256000
+        echo "$BRASNAME RRD not exists, creating"
+        rrdtool create "$WORKDIR"/"$RRDFILE" --step=60 --start=now-1s DS:users:GAUGE:181:U:U  RRA:LAST:0:1:5256000
 fi
+}
 
-if [ -f "$WORKDIR"/bras4.rrd ]
-then
-        echo "BRAS3 RRD is exists"
-else
-        echo "BRAS RRD not exists, creating"
-        rrdtool create "$WORKDIR"/bras4.rrd --step=60 --start=now-1s DS:users:GAUGE:181:U:U  RRA:LAST:0:1:5256000
-fi
+RRDFILE="bras3.rrd"
+BRASNAME="BRAS3"
+IFNOTCREATE
 
-if [ -f "$WORKDIR"/bras5.rrd ]
-then
-        echo "BRAS3 RRD is exists"
-else
-        echo "BRAS RRD not exists, creating"
-        rrdtool create "$WORKDIR"/bras5.rrd --step=60 --start=now-1s DS:users:GAUGE:181:U:U  RRA:LAST:0:1:5256000
-fi
+RRDFILE="bras4.rrd"
+BRASNAME="BRAS4"
+IFNOTCREATE
+
+RRDFILE="bras5.rrd"
+BRASNAME="BRAS5"
+IFNOTCREATE
+
+RRDFILE="bras3_ss1.rrd"
+BRASNAME="BRAS3 SUBSLOT 1"
+IFNOTCREATE
+
+RRDFILE="bras3_ss2.rrd"
+BRASNAME="BRAS3 SUBSLOT 2"
+IFNOTCREATE
+
+RRDFILE="bras3_ss3.rrd"
+BRASNAME="BRAS3 SUBSLOT 3"
+IFNOTCREATE
+
+
+RRDFILE="bras4_ss1.rrd"
+BRASNAME="BRAS4 SUBSLOT 1"
+IFNOTCREATE
+
+RRDFILE="bras4_ss2.rrd"
+BRASNAME="BRAS4 SUBSLOT 2"
+IFNOTCREATE
+
+RRDFILE="bras4_ss3.rrd"
+BRASNAME="BRAS4 SUBSLOT 3"
+IFNOTCREATE
+
+
+RRDFILE="bras5_ss1.rrd"
+BRASNAME="BRAS5 SUBSLOT 1"
+IFNOTCREATE
+
+RRDFILE="bras5_ss2.rrd"
+BRASNAME="BRAS5 SUBSLOT 2"
+IFNOTCREATE
+
+RRDFILE="bras5_ss3.rrd"
+BRASNAME="BRAS5 SUBSLOT 3"
+IFNOTCREATE
+
+RRDFILE="bras5_ss4.rrd"
+BRASNAME="BRAS5 SUBSLOT 4"
+IFNOTCREATE
+
+
+
+
+
 
 cp /snmp/index.html "$HTMLDIR"/index.html
 
+#mv /usr/share/fonts/TTF/cour.ttf /usr/share/fonts/TTF/Arial.ttf
 crond
 lighttpd -f /etc/lighttpd/lighttpd.conf
 
