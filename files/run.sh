@@ -1,5 +1,35 @@
 #!/bin/bash
 
+DRAWGRAPH () {
+rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end now --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
+        DEF:bras3="$WORKDIR"/bras3.rrd:users:LAST \
+        VDEF:bras3c=bras3,LAST \
+        VDEF:bras3min=bras3,MINIMUM \
+        VDEF:bras3max=bras3,MAXIMUM \
+        DEF:bras4="$WORKDIR"/bras4.rrd:users:LAST \
+        VDEF:bras4c=bras4,LAST \
+        VDEF:bras4min=bras4,MINIMUM \
+        VDEF:bras4max=bras4,MAXIMUM \
+        DEF:bras5="$WORKDIR"/bras5.rrd:users:LAST \
+        VDEF:bras5c=bras5,LAST \
+        VDEF:bras5min=bras5,MINIMUM \
+        VDEF:bras5max=bras5,MAXIMUM \
+        LINE:bras3#FF0000:" BRAS#3                                           " \
+        LINE:bras4#00D000:" BRAS#4                                           " \
+        LINE:bras5#0000FF:" BRAS#5\n" \
+        COMMENT:"3 Current\:" GPRINT:bras3c:"% 6.0lf" \
+        COMMENT:"                         4 Current\:" GPRINT:bras4c:"% 6.0lf" \
+        COMMENT:"                         5 Current\:" GPRINT:bras5c:"% 6.0lf\n" \
+        COMMENT:"3 Max\:" GPRINT:bras3max:"% 12.0lf" \
+        COMMENT:"                         4 Max\:" GPRINT:bras4max:"% 12.0lf" \
+        COMMENT:"                         5 Max\:" GPRINT:bras5max:"% 12.0lf\n" \
+        COMMENT:"3 Min\:" GPRINT:bras3min:"% 13.0lf" \
+        COMMENT:"                         4 Min\:" GPRINT:bras4min:"% 13.0lf" \
+        COMMENT:"                         5 Min\:" GPRINT:bras5min:"% 13.0lf\n"
+
+}
+
+
 echo "Running at" `date` > "$FIFOFILE"
 START=$(expr $(date "+%s") - 0)
 
@@ -44,36 +74,6 @@ then
 else
         echo "BRAS5 RRD not exists, skipping update" > "$FIFOFILE"
 fi
-
-DRAWGRAPH () {
-rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1150 -h 600  --start "$STARTPOS" --end now --alt-autoscale --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
-        DEF:bras3="$WORKDIR"/bras3.rrd:users:LAST \
-        VDEF:bras3c=bras3,LAST \
-        VDEF:bras3min=bras3,MINIMUM \
-        VDEF:bras3max=bras3,MAXIMUM \
-        DEF:bras4="$WORKDIR"/bras4.rrd:users:LAST \
-        VDEF:bras4c=bras4,LAST \
-        VDEF:bras4min=bras4,MINIMUM \
-        VDEF:bras4max=bras4,MAXIMUM \
-        DEF:bras5="$WORKDIR"/bras5.rrd:users:LAST \
-        VDEF:bras5c=bras5,LAST \
-        VDEF:bras5min=bras5,MINIMUM \
-        VDEF:bras5max=bras5,MAXIMUM \
-        LINE:bras3#FF0000:" BRAS#3 PPPoE                             " \
-        LINE:bras4#00D000:" BRAS#4 PPPoE                             " \
-        LINE:bras5#0000FF:" BRAS#5 PPPoE\n" \
-        COMMENT:"3 Current\:" GPRINT:bras3c:"% 6.0lf" \
-        COMMENT:"                         4 Current\:" GPRINT:bras4c:"% 6.0lf" \
-        COMMENT:"                         5 Current\:" GPRINT:bras5c:"% 6.0lf\n" \
-        COMMENT:"3 Max\:" GPRINT:bras3max:"% 12.0lf" \
-        COMMENT:"                         4 Max\:" GPRINT:bras4max:"% 12.0lf" \
-        COMMENT:"                         5 Max\:" GPRINT:bras5max:"% 12.0lf\n" \
-        COMMENT:"3 Min\:" GPRINT:bras3min:"% 13.0lf" \
-        COMMENT:"                         4 Min\:" GPRINT:bras4min:"% 13.0lf" \
-        COMMENT:"                         5 Min\:" GPRINT:bras5min:"% 13.0lf\n"
-
-}
-
 
 echo "Render graph 'now'"  > "$FIFOFILE"
 GRAPHFILE=bras_now.png
