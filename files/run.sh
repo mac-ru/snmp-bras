@@ -25,36 +25,34 @@ rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end
         COMMENT:"                         5 Max\:" GPRINT:bras5max:"% 12.0lf\n" \
         COMMENT:"3 Min\:" GPRINT:bras3min:"% 13.0lf" \
         COMMENT:"                         4 Min\:" GPRINT:bras4min:"% 13.0lf" \
-        COMMENT:"                         5 Min\:" GPRINT:bras5min:"% 13.0lf\n"
-
+        COMMENT:"                         5 Min\:" GPRINT:bras5min:"% 13.0lf\n" \
+	> "$FIFOFILE"
 }
 
 
-DRAW3SS () {
-rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 200 -h 490  --start "$STARTPOS" --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
-        DEF:brass1="$WORKDIR"/"$BRASS1":users:LAST \
-        DEF:brass2="$WORKDIR"/"$BRASS2":users:LAST \
-        DEF:brass3="$WORKDIR"/"$BRASS3":users:LAST \
-	LINE:brass1#FF0000:"$SS1 " \
-        LINE:brass2#00D000:"$SS2 " \
-        LINE:brass3#0000FF:"$SS3" 
-
-}
-
-
-DRAW4SS () {
-rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 200 -h 490  --start "$STARTPOS" --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
-        DEF:brass1="$WORKDIR"/"$BRASS1":users:LAST \
-        DEF:brass2="$WORKDIR"/"$BRASS2":users:LAST \
-        DEF:brass3="$WORKDIR"/"$BRASS3":users:LAST \
-        DEF:brass4="$WORKDIR"/"$BRASS4":users:LAST \
-        LINE:brass1#FF0000:"$SS1 " \
-        LINE:brass2#00D000:"$SS2 " \
-        LINE:brass3#0000FF:"$SS3 " \
-        LINE:brass4#FF9630:"$SS4 " 
-echo rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 300 -h 490  --start "$STARTPOS" --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" DEF:brass1="$WORKDIR"/"$BRASS1":users:LAST DEF:brass2="$WORKDIR"/"$BRASS2":users:LAST DEF:brass3="$WORKDIR"/"$BRASS3":users:LAST DEF:brass4="$WORKDIR"/"$BRASS4":users:LAST  LINE:brass1#FF0000:"$SS1 " LINE:brass2#00D000:"$SS2 " LINE:brass3#0000FF:"$SS3 " LINE:brass4#FF9630:"$SS4 " > "$FIFOFILE"
-
-
+DRAWSS () {
+rrdtool graph "$HTMLDIR/bras_ss.png"  -w 1102 -h 490  --start now-7200s --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "SUBSLOTS" \
+        DEF:brass31="$WORKDIR"/bras3_ss1.rrd:users:LAST \
+        DEF:brass32="$WORKDIR"/bras3_ss2.rrd:users:LAST \
+        DEF:brass33="$WORKDIR"/bras3_ss3.rrd:users:LAST \
+        DEF:brass41="$WORKDIR"/bras4_ss1.rrd:users:LAST \
+        DEF:brass42="$WORKDIR"/bras4_ss2.rrd:users:LAST \
+        DEF:brass43="$WORKDIR"/bras4_ss3.rrd:users:LAST \
+        DEF:brass51="$WORKDIR"/bras5_ss1.rrd:users:LAST \
+        DEF:brass52="$WORKDIR"/bras5_ss2.rrd:users:LAST \
+        DEF:brass53="$WORKDIR"/bras5_ss3.rrd:users:LAST \
+        DEF:brass54="$WORKDIR"/bras5_ss4.rrd:users:LAST \
+        LINE:brass31#FF0000:"BRAS3\ Eth1" \
+        LINE:brass32#A40000:"BRAS3\ Eth2" \
+	LINE:brass33#C082FF:"BRAS3\ Eth5" \
+        LINE:brass41#E8E800:"BRAS4\ Eth1" \
+        LINE:brass42#FF8B17:"BRAS4\ Eth6" \
+        LINE:brass43#008000:"BRAS4\ Eth2" \
+        LINE:brass51#0000FF:"BRAS5\ Eth1" \
+        LINE:brass52#3CA0FF:"BRAS5\ Eth6" \
+        LINE:brass53#004080:"BRAS5\ Eth2" \
+        LINE:brass54#00EAEA:"BRAS5\ Eth5" \
+	> $FIFOFILE
 
 }
 
@@ -166,45 +164,8 @@ UPDATEOID
 
 #RENDER
 
-echo "Render graph '3SS' BRAS3" > "$FIFOFILE"
-GRAPHFILE=bras3_ss.png
-BRASS1=bras3_ss1.rrd
-BRASS2=bras3_ss2.rrd
-BRASS3=bras3_ss3.rrd
-SS1="Eth1"
-SS2="Eth2"
-SS3="Eth5"
-GRAPHCAP="BRAS3\ Subslots"
-STARTPOS=now-7200s
-DRAW3SS
-
-echo "Render graph '3SS' BRAS4" > "$FIFOFILE"
-GRAPHFILE=bras4_ss.png
-BRASS1=bras4_ss1.rrd
-BRASS2=bras4_ss2.rrd
-BRASS3=bras4_ss3.rrd
-SS1="Eth1"
-SS2="Eth6"
-SS3="Eth2"
-GRAPHCAP="BRAS4\ Subslots"
-STARTPOS=now-7200s
-DRAW3SS
-
-echo "Render graph '4SS' BRAS5" > "$FIFOFILE"
-GRAPHFILE=bras5_ss.png
-BRASS1=bras5_ss1.rrd
-BRASS2=bras5_ss2.rrd
-BRASS3=bras5_ss3.rrd
-BRASS4=bras5_ss4.rrd
-SS1="Eth1"
-SS2="Eth6"
-SS3="Eth2"
-SS4="Eth5"
-GRAPHCAP="BRAS5\ Subslots"
-STARTPOS=now-7200s
-DRAW4SS
-
-
+echo "Render graph 'SS' BRAS" > "$FIFOFILE"
+DRAWSS
 
 echo "Render graph 'now'"  > "$FIFOFILE"
 GRAPHFILE=bras_now.png
