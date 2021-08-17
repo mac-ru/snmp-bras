@@ -33,30 +33,11 @@ rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end
 DRAW3SS () {
 rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 200 -h 490  --start "$STARTPOS" --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
         DEF:brass1="$WORKDIR"/"$BRASS1":users:LAST \
-        VDEF:brass1c=brass1,LAST \
-        VDEF:brass1min=brass1,MINIMUM \
-        VDEF:brass1max=brass1,MAXIMUM \
         DEF:brass2="$WORKDIR"/"$BRASS2":users:LAST \
-        VDEF:brass2c=brass2,LAST \
-        VDEF:brass2min=brass2,MINIMUM \
-        VDEF:brass2max=brass2,MAXIMUM \
         DEF:brass3="$WORKDIR"/"$BRASS3":users:LAST \
-        VDEF:brass3c=brass3,LAST \
-        VDEF:brass3min=brass3,MINIMUM \
-        VDEF:brass3max=brass3,MAXIMUM \
-	COMMENT:"        :"
-	LINE:brass1#FF0000:" $SS1 " \
-        LINE:brass2#00D000:" $SS2 " \
-        LINE:brass3#0000FF:" $SS3\n" \
-        COMMENT:"3 Current\:" GPRINT:brass1c:"% 3.0lf" \
-        COMMENT:"                         4 Current\:" GPRINT:brass2c:"% 3.0lf" \
-        COMMENT:"                         5 Current\:" GPRINT:brass3c:"% 3.0lf\n" \
-        COMMENT:"3 Max\:" GPRINT:brass1max:"% 3.0lf" \
-        COMMENT:"                         4 Max\:" GPRINT:brass2max:"% 3.0lf" \
-        COMMENT:"                         5 Max\:" GPRINT:brass3max:"% 3.0lf\n" \
-        COMMENT:"3 Min\:" GPRINT:brass1min:"% 3.0lf" \
-        COMMENT:"                         4 Min\:" GPRINT:brass2min:"% 3.0lf" \
-        COMMENT:"                         5 Min\:" GPRINT:brass3min:"% 3.0lf\n"
+	LINE:brass1#FF0000:"$SS1 " \
+        LINE:brass2#00D000:"$SS2 " \
+        LINE:brass3#0000FF:"$SS3" 
 
 }
 
@@ -190,10 +171,10 @@ GRAPHFILE=bras3_ss.png
 BRASS1=bras3_ss1.rrd
 BRASS2=bras3_ss2.rrd
 BRASS3=bras3_ss3.rrd
-SS1=Eth1
-SS2=Eth2
-SS3=Eth5
-GRAPHCAP="BRAS3 Subslots"
+SS1="Eth1"
+SS2="Eth2"
+SS3="Eth5"
+GRAPHCAP="BRAS3\ Subslots"
 STARTPOS=now-7200s
 DRAW3SS
 
@@ -202,10 +183,10 @@ GRAPHFILE=bras4_ss.png
 BRASS1=bras4_ss1.rrd
 BRASS2=bras4_ss2.rrd
 BRASS3=bras4_ss3.rrd
-SS1=Eth1
-SS2=Eth6
-SS3=Eth2
-GRAPHCAP="BRAS4 Subslots"
+SS1="Eth1"
+SS2="Eth6"
+SS3="Eth2"
+GRAPHCAP="BRAS4\ Subslots"
 STARTPOS=now-7200s
 DRAW3SS
 
@@ -215,10 +196,10 @@ BRASS1=bras5_ss1.rrd
 BRASS2=bras5_ss2.rrd
 BRASS3=bras5_ss3.rrd
 BRASS4=bras5_ss4.rrd
-SS1=Eth1
-SS2=Eth6
-SS3=Eth2
-SS4=Eth5
+SS1="Eth1"
+SS2="Eth6"
+SS3="Eth2"
+SS4="Eth5"
 GRAPHCAP="BRAS5\ Subslots"
 STARTPOS=now-7200s
 DRAW4SS
