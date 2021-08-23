@@ -70,6 +70,8 @@ IFNOTCREATE
 
 
 cp /snmp/index.html "$HTMLDIR"/index.html
+cp /snmp/index_ss.html "$HTMLDIR"/index_ss.html
+
 
 #mv /usr/share/fonts/TTF/cour.ttf /usr/share/fonts/TTF/Arial.ttf
 crond

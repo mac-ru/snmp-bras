@@ -31,7 +31,7 @@ rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end
 
 
 DRAWSS () {
-rrdtool graph "$HTMLDIR/bras_ss.png"  -w 1102 -h 490  --start now-7200s --end now+1 --alt-autoscale --right-axis 1:0 --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "SUBSLOTS" \
+rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end now+1 --alt-autoscale --left-axis-format "%0.0lf" --alt-y-grid --y-grid 500:2 --right-axis 1:0 --right-axis-format "%3.0lf" --font "TITLE:12:Arial" --font "LEGEND:9:Arial" --font "AXIS:8:Arial" --title "$GRAPHCAP" \
         DEF:brass31="$WORKDIR"/bras3_ss1.rrd:users:LAST \
         DEF:brass32="$WORKDIR"/bras3_ss2.rrd:users:LAST \
         DEF:brass33="$WORKDIR"/bras3_ss3.rrd:users:LAST \
@@ -42,16 +42,16 @@ rrdtool graph "$HTMLDIR/bras_ss.png"  -w 1102 -h 490  --start now-7200s --end no
         DEF:brass52="$WORKDIR"/bras5_ss2.rrd:users:LAST \
         DEF:brass53="$WORKDIR"/bras5_ss3.rrd:users:LAST \
         DEF:brass54="$WORKDIR"/bras5_ss4.rrd:users:LAST \
-        LINE:brass31#FF0000:"BRAS3\ Eth1" \
-        LINE:brass32#A40000:"BRAS3\ Eth2" \
-	LINE:brass33#C082FF:"BRAS3\ Eth5" \
-        LINE:brass41#E8E800:"BRAS4\ Eth1" \
-        LINE:brass42#FF8B17:"BRAS4\ Eth6" \
-        LINE:brass43#008000:"BRAS4\ Eth2" \
-        LINE:brass51#0000FF:"BRAS5\ Eth1" \
-        LINE:brass52#3CA0FF:"BRAS5\ Eth6" \
-        LINE:brass53#004080:"BRAS5\ Eth2" \
-        LINE:brass54#00EAEA:"BRAS5\ Eth5" \
+        LINE:brass31#FF0000:" BRAS3 Eth1" \
+        LINE:brass32#A40000:" BRAS3 Eth2" \
+	LINE:brass33#C082FF:" BRAS3 Eth5" \
+        LINE:brass41#E8E800:" BRAS4 Eth1" \
+        LINE:brass42#FF8B17:" BRAS4 Eth6" \
+        LINE:brass43#008000:" BRAS4 Eth2" \
+        LINE:brass51#0000FF:" BRAS5 Eth1" \
+        LINE:brass52#3CA0FF:" BRAS5 Eth6" \
+        LINE:brass53#004080:" BRAS5 Eth2" \
+        LINE:brass54#00EAEA:" BRAS5 Eth5" \
 	> $FIFOFILE
 
 }
@@ -162,11 +162,32 @@ UPDATEOID
 
 
 
-#RENDER
-
-echo "Render graph 'SS' BRAS" > "$FIFOFILE"
+#RENDER Subslots
+echo "Render graph 'SS' BRAS now" > "$FIFOFILE"
+STARTPOS=now-7200s
+GRAPHFILE=bras_ss_now.png
+GRAPHCAP="Subslots NOW"
 DRAWSS
 
+echo "Render graph 'SS' BRAS Today" > "$FIFOFILE"
+STARTPOS=now-1d
+GRAPHFILE=bras_ss_1d.png
+GRAPHCAP="Subslots 1d"
+DRAWSS
+
+echo "Render graph 'SS' BRAS Week" > "$FIFOFILE"
+STARTPOS=now-1w
+GRAPHFILE=bras_ss_1w.png
+GRAPHCAP="Subslots 1w"
+DRAWSS
+
+echo "Render graph 'SS' BRAS Month" > "$FIFOFILE"
+STARTPOS=now-1m
+GRAPHFILE=bras_ss_1m.png
+GRAPHCAP="Subslots_1m"
+DRAWSS
+
+#RENDER Graphs
 echo "Render graph 'now'"  > "$FIFOFILE"
 GRAPHFILE=bras_now.png
 GRAPHCAP="Huawei ME60 Bras NOW"
