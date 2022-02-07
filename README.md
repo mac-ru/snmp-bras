@@ -22,7 +22,7 @@ $ docker run -d --restart always --log-opt max-size=10m --log-opt max-file=5 --n
 
 or put variables into env-file i.e. enffile.conf 
 ```
-$ cat env-file.conf
+$ cat envfile.conf
 BRAS3IP=3.3.3.3
 BRAS4IP=4.4.4.4
 BRAS5IP=5.5.5.5
