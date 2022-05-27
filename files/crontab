@@ -7,4 +7,4 @@
 0       5       1       *       *       run-parts /etc/periodic/monthly
 
 */1     *       *       *       *       bash /snmp/run.sh
-
+*     */1       *       *       *       rm -r /var/cache/fontconfig
