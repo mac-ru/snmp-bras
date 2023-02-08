@@ -47,11 +47,11 @@ rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end
         LINE:brass31#FF0000:" BRAS3 Eth1" \
         LINE:brass32#A40000:" BRAS3 Eth2" \
 	LINE:brass33#C082FF:" BRAS3 Eth5" \
-	LINE:brass34#C082FF:" BRAS3 Eth6" \
+	LINE:brass34#808080:" BRAS3 Eth6" \
         LINE:brass41#E8E800:" BRAS4 Eth1" \
         LINE:brass42#FF8B17:" BRAS4 Eth6" \
         LINE:brass43#008000:" BRAS4 Eth2" \
-        LINE:brass44#008000:" BRAS4 Eth5" \
+        LINE:brass44#28FF0A:" BRAS4 Eth5" \
         LINE:brass51#0000FF:" BRAS5 Eth1" \
         LINE:brass52#3CA0FF:" BRAS5 Eth6" \
         LINE:brass53#004080:" BRAS5 Eth2" \
