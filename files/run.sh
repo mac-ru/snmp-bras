@@ -35,9 +35,11 @@ rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end
         DEF:brass31="$WORKDIR"/bras3_ss1.rrd:users:LAST \
         DEF:brass32="$WORKDIR"/bras3_ss2.rrd:users:LAST \
         DEF:brass33="$WORKDIR"/bras3_ss3.rrd:users:LAST \
+        DEF:brass34="$WORKDIR"/bras3_ss4.rrd:users:LAST \
         DEF:brass41="$WORKDIR"/bras4_ss1.rrd:users:LAST \
         DEF:brass42="$WORKDIR"/bras4_ss2.rrd:users:LAST \
         DEF:brass43="$WORKDIR"/bras4_ss3.rrd:users:LAST \
+        DEF:brass44="$WORKDIR"/bras4_ss4.rrd:users:LAST \
         DEF:brass51="$WORKDIR"/bras5_ss1.rrd:users:LAST \
         DEF:brass52="$WORKDIR"/bras5_ss2.rrd:users:LAST \
         DEF:brass53="$WORKDIR"/bras5_ss3.rrd:users:LAST \
@@ -45,9 +47,11 @@ rrdtool graph "$HTMLDIR"/"$GRAPHFILE"  -w 1102 -h 490  --start "$STARTPOS" --end
         LINE:brass31#FF0000:" BRAS3 Eth1" \
         LINE:brass32#A40000:" BRAS3 Eth2" \
 	LINE:brass33#C082FF:" BRAS3 Eth5" \
+	LINE:brass34#C082FF:" BRAS3 Eth6" \
         LINE:brass41#E8E800:" BRAS4 Eth1" \
         LINE:brass42#FF8B17:" BRAS4 Eth6" \
         LINE:brass43#008000:" BRAS4 Eth2" \
+        LINE:brass44#008000:" BRAS4 Eth5" \
         LINE:brass51#0000FF:" BRAS5 Eth1" \
         LINE:brass52#3CA0FF:" BRAS5 Eth6" \
         LINE:brass53#004080:" BRAS5 Eth2" \
